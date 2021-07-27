@@ -1,0 +1,56 @@
+buildscript {
+    ext {
+        spring = "2.5.0"
+        boot = "org.springframework.boot"
+        lombok = "org.projectlombok:lombok"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("$boot:spring-boot-gradle-plugin:$spring")
+    }
+}
+
+
+plugins {
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+apply plugin: boot
+group = 'studio.dboo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+//    spring boot
+    implementation "$boot:spring-boot-starter-web"
+    implementation "$boot:spring-boot-starter-security"
+    implementation "$boot:spring-boot-starter-data-jdbc"
+    implementation "$boot:spring-boot-starter-data-jpa"
+    implementation "io.springfox:springfox-boot-starter:3.0.0" //aop
+
+    testImplementation "$boot:spring-boot-starter-test"
+//    DB
+    implementation 'org.postgresql:postgresql'
+    implementation 'com.h2database:h2'
+
+//    lombok
+    compileOnly lombok
+    annotationProcessor lombok
+
+    testCompileOnly lombok
+    testAnnotationProcessor lombok
+
+//    etc
+    implementation "io.springfox:springfox-swagger-ui:3.0.0" //swagger
+}
+
+test {
+    useJUnitPlatform()
+}
