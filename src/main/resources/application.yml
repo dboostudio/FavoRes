@@ -1,0 +1,32 @@
+# SERVER CONFIG
+spring:
+  # hibernate option
+  jpahibernate:
+    ## 1. create : 매번 스키마를 새로 생성하고, 기존 데이터를 날린다.
+    ddl-auto: create
+    ## 2. update : 새로운 컬럼추가가 가능하지만 삭제는 불가능, 데이터를 유지한다.
+    ## ddl-auto: update
+    ## 3. validate : 운영시에는 해당옵션으로 사용한다.
+    ## ddl-auto: validate
+
+  ## show-sql : hibernate가 자동으로 만들어주는 SQL문을 콘솔에 표시한다.
+  jpa:
+    show-sql: true
+  ## spring.jpa.properties.hibernate.format_sql : SQL문 안에 들어가는 값도 표시한다.
+  properties:
+    hibernate:
+      format_sql: true
+
+# LogBack(Log4j)
+logging:
+  level: ## LOGGING LEVEL : 1) ERROR 2) WARN 3) INFO 4) DEBUG 5) TRACE
+    root: info
+  pattern: ## 기본 로깅 패턴을 수정 합니다.
+    console: %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%logger:){cyan}%clr(%M){blue}%clr(::%L){green} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}
+
+# swagger enable
+springfox:
+  documentation:
+    swagger:
+      v2:
+        enabled: true
