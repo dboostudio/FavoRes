@@ -35,8 +35,10 @@ dependencies {
     implementation "$boot:spring-boot-starter-data-jpa"
     implementation "$boot:spring-boot-starter-validation" //validation
     implementation "io.springfox:springfox-boot-starter:3.0.0" //aop
-
+    // test
     testImplementation "$boot:spring-boot-starter-test"
+    testImplementation 'org.springframework.security:spring-security-test:5.5.1'
+
 //    DB
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
     implementation 'com.h2database:h2'

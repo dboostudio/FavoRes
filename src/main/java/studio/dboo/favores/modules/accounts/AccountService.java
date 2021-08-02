@@ -17,17 +17,15 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     /** Constant */
-    private static final String CANNOT_FIND_USER = "유저명이나 이메일로 가입된 계정이 없습니다.";
+    private static final String CANNOT_FIND_USER = "해당 유저명으로 가입된 계정이 없습니다.";
+    private static final String ALREADY_EXIST_USER = "이미 해당 유저명으로 가입된 계정이 있습니다.";
 
     @Override
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(usernameOrEmail);
-        if (account == null) {
-            account = accountRepository.findByUsername(usernameOrEmail);
-        }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = accountRepository.findByUsername(username);
 
         if (account == null) {
-            throw new UsernameNotFoundException(usernameOrEmail);
+            throw new UsernameNotFoundException(username);
         }
 
         return User.builder()
@@ -38,15 +36,16 @@ public class AccountService implements UserDetailsService {
     }
 
     public Account createAccount(Account account){
-        if(accountRepository.existsAccountByUsernameOrEmail(account.getUsername()) == false){
-            throw new RuntimeException(CANNOT_FIND_USER);
+        if(accountRepository.existsAccountByUsername(account.getUsername()) == true){
+            throw new RuntimeException(ALREADY_EXIST_USER);
         }
         account.encodePassword(passwordEncoder);
+        accountRepository.save(account);
         return account;
     }
 
     public Account getAccount(Account account){
-        if(accountRepository.existsAccountByUsernameOrEmail(account.getUsername()) == false){
+        if(accountRepository.existsAccountByUsername(account.getUsername()) == false){
             throw new RuntimeException(CANNOT_FIND_USER);
         }
         return account;

@@ -19,7 +19,6 @@ import java.util.Collection;
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
 @Builder @AllArgsConstructor @NoArgsConstructor
-@RequiredArgsConstructor
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Account{
@@ -37,8 +36,7 @@ public class Account{
     private String role; //권한 (ADMIN, USER)
 
     /**Group Info*/
-    // TODO - Many To Many 연관관계 매핑
-    private Group group;
+    // TODO - Many To Many 연관관계 매핑 -> Group
 
     /** Email Verification **/
     // TODO - Email Verification 구현하기
