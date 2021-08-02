@@ -37,7 +37,7 @@ dependencies {
 
     testImplementation "$boot:spring-boot-starter-test"
 //    DB
-    implementation 'org.postgresql:postgresql'
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
     implementation 'com.h2database:h2'
 
 //    lombok

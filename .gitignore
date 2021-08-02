@@ -41,3 +41,6 @@ out/
 /gradlew.bat
 /settings.gradle
 /docker-compose/postgres/data/
+
+## DB Volume
+/docker-compose/mariadb
