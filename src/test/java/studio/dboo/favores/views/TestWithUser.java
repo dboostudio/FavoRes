@@ -1,4 +1,4 @@
-package studio.dboo.favores.modules.accounts;
+package studio.dboo.favores.views;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
