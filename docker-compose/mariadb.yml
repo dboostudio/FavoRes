@@ -9,7 +9,7 @@ services:
       - --collation-server=utf8_general_ci
     container_name: mysql-favores-test # 컨테이너 이름 설정
     ports:
-      - "6572:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)  <- 컨테이너 내부는 무조건 3306
+      - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)  <- 컨테이너 내부는 무조건 3306
     environment: # -e 옵션
       - MARIADB_DATABASE=favores_web
       - MARIADB_ROOT_PASSWORD=vkqhfptm
