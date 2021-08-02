@@ -1,4 +1,4 @@
-package studio.dboo.portfolio.infra.exceptions.advice;
+package studio.dboo.favores.infra.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

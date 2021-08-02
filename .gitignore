@@ -43,4 +43,4 @@ out/
 /docker-compose/postgres/data/
 
 ## DB Volume
-/docker-compose/mariadb
+/docker-compose/mariadb/
