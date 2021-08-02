@@ -19,19 +19,18 @@ public class GlobalControllerAdvice {
                         "에러 내용 : " + e.getMessage());
     }
 
+    // Validation 실패시 BAD_REQUEST 리턴
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity methodArgumentNotValidException(MethodArgumentNotValidException e){
-
         BindingResult bindingResult = e.getBindingResult();
         bindingResult.getAllErrors().forEach( error -> {
             FieldError field = (FieldError) error;
             String fieldName = field.getObjectName();
             String message = field.getDefaultMessage();
             String value = field.getRejectedValue().toString();
-
-            System.out.println(fieldName);
-            System.out.println(message);
-            System.out.println(value);
+//            System.out.println(fieldName);
+//            System.out.println(message);
+//            System.out.println(value);
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }

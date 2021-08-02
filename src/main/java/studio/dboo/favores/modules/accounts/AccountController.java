@@ -1,23 +1,27 @@
 package studio.dboo.favores.modules.accounts;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("account")
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping("api/account")
 @RequiredArgsConstructor
 public class AccountController {
 
-    @GetMapping()
-    public void getAccount(){
-        //TODO - Current User 정보 받아오기
+    private final AccountService accountService;
+
+    @GetMapping
+    public ResponseEntity<Account> getAccount(@Valid @RequestBody Account account){
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(account));
     }
 
     @PostMapping
-    public void createAccount(){
-        System.out.println("test");
+    public ResponseEntity<Account> createAccount(@Valid @RequestBody Account account){
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.createAccount(account));
     }
-
 
 }

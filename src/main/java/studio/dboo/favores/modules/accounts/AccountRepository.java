@@ -6,7 +6,8 @@ import javax.transaction.Transactional;
 
 @Transactional
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    Account findByUsername(String emailOrNickname);
-    Account findByEmail(String emailOrNickname);
+    Account findByUsername(String usernameOrEmail);
+    Account findByEmail(String usernameOrEmail);
+    boolean existsAccountByUsernameOrEmail(String usernameOrEmail);
 
 }
