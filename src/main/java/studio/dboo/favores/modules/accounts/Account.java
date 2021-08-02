@@ -1,6 +1,8 @@
-package studio.dboo.portfolio.services.account;
+package studio.dboo.favores.modules.accounts;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,8 +21,9 @@ public class Account {
 
     /** Login Info **/
     @Column(unique = true)
-    private String email;
+    private String username;
     @Column(unique = true)
+    private String email;
     private String password;
 
     /** Email Verification **/
@@ -39,8 +42,6 @@ public class Account {
     }
 
     /** Personal Info **/
-    @Column(unique = true)
-    private String nickname;
     private String address;
     private String sex;
 
@@ -49,7 +50,9 @@ public class Account {
     private Long point;
 
     /** Logging Data Manipulation **/
+    @CreationTimestamp
     private LocalDateTime createAt;
+    @UpdateTimestamp
     private LocalDateTime modifyAt;
     private LocalDateTime droppedAt;
 

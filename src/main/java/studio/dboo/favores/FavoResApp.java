@@ -1,4 +1,4 @@
-package studio.dboo.portfolio;
+package studio.dboo.favores;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
