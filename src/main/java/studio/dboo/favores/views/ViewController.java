@@ -15,6 +15,12 @@ public class ViewController {
         return "index";
     }
 
+    @GetMapping("/admin")
+    public String admin(Model model, Principal principal){
+        transferUsernameToModel(model, principal);
+        return "admin";
+    }
+
     @GetMapping("/groups")
     public String groups(Model model, Principal principal){
         transferUsernameToModel(model, principal);

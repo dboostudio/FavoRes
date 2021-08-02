@@ -1,5 +1,6 @@
 package studio.dboo.favores.modules.accounts;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +21,7 @@ class AccountControllerTest {
     @Autowired MockMvc mockMvc;
     @Autowired AccountService accountService;
 
+    @DisplayName("로그인_성공")
     @Test
     @Transactional
     public void login_success() throws Exception {
@@ -32,6 +34,7 @@ class AccountControllerTest {
                 .andExpect(authenticated());
     }
 
+    @DisplayName("로그인_실패")
     @Test
     @Transactional
     public void login_fail() throws Exception {
