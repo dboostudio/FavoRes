@@ -38,7 +38,6 @@ spring:
 logging:
   level: ## LOGGING LEVEL : 1) ERROR 2) WARN 3) INFO 4) DEBUG 5) TRACE
     root: info
-  pattern: ## 기본 로깅 패턴을 수정 합니다.
-    console: %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%logger:){cyan}%clr(%M){blue}%clr(::%L){green} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}
-#logging.level.studio.dboo.portfolio.services.algorithm = info
-
+#    TODO - pattern 에러발생, 수정필요
+#  pattern: ## 기본 로깅 패턴을 수정 합니다.
+#    console: %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%logger:){cyan}%clr(%M){blue}%clr(::%L){green} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}

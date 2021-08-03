@@ -27,8 +27,9 @@ public class Groups {
     private Set<AccountGroups> account = new HashSet<>();
 
     /** Group Info */
-    @OneToOne(mappedBy = "account")
-    private Account groupLeader;                //그룹장
+    // TODO- groupLeader 제대로 매핑할것.
+//    @OneToOne(mappedBy = "account")
+//    private Account groupLeader;                //그룹장
     @NotNull(message = "그룹명은 필수 입력 사항입니다.") @Column(unique = true)
     private String groupName;                   //그룹명
 
