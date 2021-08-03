@@ -42,6 +42,3 @@ logging:
     console: %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%logger:){cyan}%clr(%M){blue}%clr(::%L){green} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}
 #logging.level.studio.dboo.portfolio.services.algorithm = info
 
-
-# swagger enable
-springfox.documentation.swagger.v2.enabled=true
