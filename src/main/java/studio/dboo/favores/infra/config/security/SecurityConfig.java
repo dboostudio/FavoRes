@@ -14,6 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity(debug = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    };
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         super.configure(web);
@@ -29,10 +34,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin();
         http.httpBasic();
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    };
 }
 
