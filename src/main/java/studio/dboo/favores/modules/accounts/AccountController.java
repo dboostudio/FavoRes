@@ -25,4 +25,15 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(accountService.createAccount(account));
     }
 
+    @PutMapping
+    public ResponseEntity<Account> updateAccount(@Valid @RequestBody Account account){
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.updateAccount(account));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteAccount(@Valid @RequestBody Account account){
+        accountService.deleteAccount(account);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

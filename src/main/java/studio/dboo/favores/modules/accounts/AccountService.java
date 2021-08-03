@@ -51,4 +51,19 @@ public class AccountService implements UserDetailsService {
         }
         return account;
     }
+
+    public Account updateAccount(Account account) {
+        if(accountRepository.existsAccountByUsername(account.getUsername()) == false){
+            throw new RuntimeException(CANNOT_FIND_USER);
+        }
+        accountRepository.save(account);
+        return account;
+    }
+
+    public void deleteAccount(Account account) {
+        if(accountRepository.existsAccountByUsername(account.getUsername()) == false){
+            throw new RuntimeException(CANNOT_FIND_USER);
+        }
+        accountRepository.delete(account);
+    }
 }

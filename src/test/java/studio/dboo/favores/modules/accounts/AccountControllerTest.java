@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import studio.dboo.favores.modules.accounts.entity.Account;
 
 import javax.transaction.Transactional;
 
@@ -20,6 +21,19 @@ class AccountControllerTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired AccountService accountService;
+
+    @DisplayName("계정생성_성공")
+    @Test
+    @Transactional
+    public void create_success() throws Exception {
+        String username = "dbooa";
+        String password = "123";
+        String email = "dboo.studio@gmail.com";
+        Account user = this.createUser(username, password, email);
+
+        mockMvc.perform(formLogin().user(user.getUsername()).password(password))
+                .andExpect(authenticated());
+    }
 
     @DisplayName("로그인_성공")
     @Test
