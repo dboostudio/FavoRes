@@ -1,20 +1,20 @@
-package studio.dboo.favores.modules.accounts;
+package studio.dboo.favores.modules.accounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import studio.dboo.favores.modules.groups.Group;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -35,8 +35,9 @@ public class Account{
     private String password;
     private String role; //권한 (ADMIN, USER)
 
-    /**Group Info*/
-    // TODO - Many To Many 연관관계 매핑 -> Group
+    /**Groups Mapping*/
+    @OneToMany(mappedBy = "groups")
+    private Set<AccountGroups> groups = new HashSet<>();
 
     /** Email Verification **/
     // TODO - Email Verification 구현하기

@@ -3,6 +3,7 @@ package studio.dboo.favores.modules.accounts;
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import studio.dboo.favores.modules.accounts.entity.Account;
 
 import java.util.List;
 
