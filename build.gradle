@@ -29,6 +29,7 @@ repositories {
 
 dependencies {
 //    spring boot
+    implementation "io.springfox:springfox-boot-starter:3.0.0" //aop, swagger 포함
     implementation "$boot:spring-boot-starter-web"
     implementation "$boot:spring-boot-starter-security"
     implementation "$boot:spring-boot-starter-data-jdbc"
@@ -48,9 +49,6 @@ dependencies {
 
     testCompileOnly lombok
     testAnnotationProcessor lombok
-
-//    etc
-    implementation "io.springfox:springfox-swagger-ui:3.0.0" //swagger
 }
 
 test {
