@@ -1,6 +1,7 @@
 
 package studio.dboo.favores.modules.accounts;
 import org.springframework.data.jpa.repository.JpaRepository;
+import studio.dboo.favores.modules.accounts.entity.Account;
 
 import javax.transaction.Transactional;
 
