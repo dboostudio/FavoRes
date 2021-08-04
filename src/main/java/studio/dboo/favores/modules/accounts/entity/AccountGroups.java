@@ -1,6 +1,6 @@
 package studio.dboo.favores.modules.accounts.entity;
 
-import studio.dboo.favores.modules.groups.Groups;
+import studio.dboo.favores.modules.groups.entity.Groups;
 
 import javax.persistence.*;
 

@@ -42,8 +42,7 @@ public class AccountService implements UserDetailsService {
         }
         account.encodePassword(passwordEncoder);
         account.setRole("USER");
-        accountRepository.save(account);
-        return account;
+        return accountRepository.save(account);
     }
 
     public Account getAccount(String usernameOrEmail){

@@ -3,18 +3,23 @@ package studio.dboo.favores.modules.accounts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import studio.dboo.favores.modules.accounts.entity.Account;
 import studio.dboo.favores.modules.annotation.RestControllerLogger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("api/account")
 @RequiredArgsConstructor
 @Api(tags = {"계정 CRUD"})
+@Slf4j
 public class AccountController {
 
     private final AccountService accountService;
@@ -28,8 +33,9 @@ public class AccountController {
 
     @PostMapping
     @ApiOperation(value = "createAccount", notes = "계정 생성")
-    public ResponseEntity<Account> createAccount(@Valid @RequestBody Account account){
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.createAccount(account));
+    public ResponseEntity<Account> createAccount(@Valid @RequestBody Account account, HttpServletRequest request) throws URISyntaxException {
+        Account savedAccount = accountService.createAccount(account);
+        return ResponseEntity.created(new URI(request.getRequestURI() + "/" + savedAccount.getId())).body(savedAccount);
     }
 
     @PutMapping
