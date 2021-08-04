@@ -22,11 +22,11 @@ public class AccountService implements UserDetailsService {
     private static final String ALREADY_EXIST_USER = "이미 해당 유저명으로 가입된 계정이 있습니다.";
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        Account account = this.getAccount(usernameOrEmail);
 
-        if (account == null) {
-            throw new UsernameNotFoundException(username);
+        if(account == null){
+            throw new UsernameNotFoundException(usernameOrEmail);
         }
 
         return User.builder()
@@ -41,14 +41,21 @@ public class AccountService implements UserDetailsService {
             throw new RuntimeException(ALREADY_EXIST_USER);
         }
         account.encodePassword(passwordEncoder);
+        account.setRole("USER");
         accountRepository.save(account);
         return account;
     }
 
-    public Account getAccount(Account account){
-        if(accountRepository.existsAccountByUsername(account.getUsername()) == false){
-            throw new RuntimeException(CANNOT_FIND_USER);
+    public Account getAccount(String usernameOrEmail){
+        Account account = accountRepository.findByUsername(usernameOrEmail);
+        if(account == null){
+            account = accountRepository.findByEmail(usernameOrEmail);
         }
+
+        if(account == null){
+            throw new UsernameNotFoundException(usernameOrEmail);
+        }
+
         return account;
     }
 

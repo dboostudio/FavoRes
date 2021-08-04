@@ -11,9 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,6 +35,7 @@ public class Account{
 
     /**Groups Mapping*/
     @OneToMany(mappedBy = "groups")
+    @Builder.Default //Test시 Warning의 추천에 따라 붙임. Builder패턴에 적용되지 않도록 하는 어노테이션인것으로 추정됨
     private Set<AccountGroups> groups = new HashSet<>();
 
     /** Email Verification **/

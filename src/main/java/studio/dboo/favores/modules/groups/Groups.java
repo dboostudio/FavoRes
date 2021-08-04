@@ -27,14 +27,12 @@ public class Groups {
     private Set<AccountGroups> account = new HashSet<>();
 
     /** Group Info */
-    // TODO- groupLeader 제대로 매핑할것.
-//    @OneToOne(mappedBy = "account")
-//    private Account groupLeader;                //그룹장
+    private String groupLeaderUsername;                                     //그룹장
     @NotNull(message = "그룹명은 필수 입력 사항입니다.") @Column(unique = true)
-    private String groupName;                   //그룹명
+    private String groupName;                                               //그룹명
 
-    private String region;                      //지역
-    private String category;                    //카테고리(지역별맛집, 특정음식맛집, 테마맛집, etc.)
-    private String targetFood;                  //타겟음식
+    private String region;                                                  //지역
+    private String category;                                                //카테고리(지역별맛집, 특정음식맛집, 테마맛집, etc.)
+    private String targetFood;                                              //타겟음식
 
 }

@@ -1,0 +1,12 @@
+POST http://localhost:6572/api/account
+Content-Type: application/json
+
+{
+  "account" : {
+    "username" : "dboo",
+    "password" : "123",
+    "email" : "dboo.studio@gmail.com"
+  }
+}
+
+###
