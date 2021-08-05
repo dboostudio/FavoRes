@@ -31,19 +31,22 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(username));
     }
 
-    @PostMapping()
+    @RestControllerLogger
+    @PostMapping
     @ApiOperation(value = "createAccount", notes = "계정 생성")
     public ResponseEntity<Account> createAccount(@Valid @RequestBody Account account, HttpServletRequest request) throws URISyntaxException {
         Account savedAccount = accountService.createAccount(account);
-        return ResponseEntity.created(new URI(request.getRequestURI() + "/" + savedAccount.getId())).body(savedAccount);
+        return ResponseEntity.status(HttpStatus.CREATED).location(new URI(request.getRequestURI() + "/" + savedAccount.getId())).body(savedAccount);
     }
 
+    @RestControllerLogger
     @PutMapping
     @ApiOperation(value = "updateAccount", notes = "계정 정보 갱신")
     public ResponseEntity<Account> updateAccount(@Valid @RequestBody Account account){
         return ResponseEntity.status(HttpStatus.OK).body(accountService.updateAccount(account));
     }
 
+    @RestControllerLogger
     @DeleteMapping
     @ApiOperation(value = "deleteAccount", notes = "계정 삭제")
     public ResponseEntity<String> deleteAccount(@CurrentAccount Account account){

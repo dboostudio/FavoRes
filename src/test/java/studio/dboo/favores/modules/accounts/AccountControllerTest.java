@@ -1,5 +1,6 @@
 package studio.dboo.favores.modules.accounts;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,10 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpServerErrorException;
 import studio.dboo.favores.modules.accounts.entity.Account;
 
 import javax.transaction.Transactional;
@@ -35,19 +39,16 @@ class AccountControllerTest {
     @Autowired AccountService accountService;
     @Autowired AccountRepository accountRepository;
     @Autowired PasswordEncoder passwordEncoder;
+    @Autowired ObjectMapper objectMapper;
 
     @BeforeEach
-    @Transactional
     public void createTestAccounts(){
         for(int i = 0; i<50; i++){
-            accountRepository.save(Account.builder()
-                    .username("test"+i)
-                    .password(passwordEncoder.encode("1234"))
-                    .email("test"+ i +"@test.com")
-                    .age(31)
-                    .tier(5)
-                    .point(1000L)
-                    .build());
+            createUser(
+                    "test"+i,
+                    "1234",
+                    "test"+i+"@test.com"
+            );
         }
     }
 
@@ -59,8 +60,6 @@ class AccountControllerTest {
 
     @DisplayName("계정조회_성공")
     @Test
-    @WithMockUser
-    @Transactional
     public void getAccount_success() throws Exception {
         String username = "test1";
         mockMvc.perform(get("/api/account").param("username", username))
@@ -68,15 +67,48 @@ class AccountControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("계정조회_실패")
+    @Test
+    public void getAccount_fail() throws Exception {
+        String username = "@!#$%%%";
+        mockMvc.perform(get("/api/account").param("username", username))
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
     @DisplayName("계정생성_성공")
     @Test
-    @Transactional
-    public void create_success() throws Exception {
+    public void createAccount_success() throws Exception {
+        Account account = Account.builder()
+                .username("favores")
+                .password("1234")
+                .email("favores@gmail.com")
+                .build();
+        String param = objectMapper.writeValueAsString(account);
+        System.out.println(param);
+        mockMvc.perform(post("/api/account").content("{\"username\":\"favores\",\"email\":\"favores@gmail.com\",\"password\":\"1234\",\"groups\":[]}")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("계정생성_실패(중복이름)")
+    @Test
+    public void createAccount_fail() throws Exception {
+        Account account  = Account.builder()
+                .username("test1")
+                .password("1234")
+                .email("favores@gmail.com")
+                .build();
+        String param = objectMapper.writeValueAsString(account);
+        mockMvc.perform(post("/api/account").content(param).contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 
     @DisplayName("로그인_성공")
     @Test
-    @Transactional
     public void login_success() throws Exception {
         String username = "dbooa";
         String password = "123";
@@ -90,7 +122,6 @@ class AccountControllerTest {
 
     @DisplayName("로그인_실패")
     @Test
-    @Transactional
     public void login_fail() throws Exception {
         String username = "dboo";
         String password = "123";

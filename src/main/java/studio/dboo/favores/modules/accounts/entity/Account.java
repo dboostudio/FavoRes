@@ -2,6 +2,8 @@ package studio.dboo.favores.modules.accounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,7 +32,7 @@ public class Account{
     private String username;
     @Column(unique = true) @NotNull @Email
     private String email;
-    @NotNull @JsonIgnore
+    @NotNull @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @JsonIgnore
     private String role; //권한 (ADMIN, USER)

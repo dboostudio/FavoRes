@@ -2,6 +2,7 @@ package studio.dboo.favores.infra.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -21,16 +22,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        super.configure(web);
+        web.ignoring().anyRequest();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .mvcMatchers("/").permitAll()
-                .mvcMatchers("/admin").hasRole("ADMIN")
-                .anyRequest().authenticated();
+//        http.authorizeRequests().anyRequest().permitAll();
 
+        http.authorizeRequests()
+                .antMatchers("/").permitAll()
+                // permitAll
+                .antMatchers(HttpMethod.GET, "/api/account/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/account/**").permitAll()
+//                .antMatchers(HttpMethod.PUT).permitAll()
+//                .antMatchers(HttpMethod.DELETE).permitAll()
+                // authenticated
+//                .mvcMatchers(HttpMethod.GET).authenticated()
+//                .mvcMatchers(HttpMethod.POST).authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/account/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/account/**").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
         http.formLogin();
         http.httpBasic();
     }
