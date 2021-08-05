@@ -27,11 +27,11 @@ public class AccountController {
     @RestControllerLogger
     @GetMapping
     @ApiOperation(value = "getAccount", notes = "계정 조회")
-    public ResponseEntity<Account> getAccount(@Valid @RequestBody String username){
+    public ResponseEntity<Account> getAccount(@RequestParam String username){
         return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(username));
     }
 
-    @PostMapping
+    @PostMapping()
     @ApiOperation(value = "createAccount", notes = "계정 생성")
     public ResponseEntity<Account> createAccount(@Valid @RequestBody Account account, HttpServletRequest request) throws URISyntaxException {
         Account savedAccount = accountService.createAccount(account);
@@ -46,7 +46,7 @@ public class AccountController {
 
     @DeleteMapping
     @ApiOperation(value = "deleteAccount", notes = "계정 삭제")
-    public ResponseEntity<String> deleteAccount(@Valid @RequestBody Account account){
+    public ResponseEntity<String> deleteAccount(@CurrentAccount Account account){
         accountService.deleteAccount(account);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

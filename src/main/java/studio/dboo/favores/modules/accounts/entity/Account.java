@@ -1,5 +1,6 @@
 package studio.dboo.favores.modules.accounts.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,8 +30,9 @@ public class Account{
     private String username;
     @Column(unique = true) @NotNull @Email
     private String email;
-    @NotNull
+    @NotNull @JsonIgnore
     private String password;
+    @JsonIgnore
     private String role; //권한 (ADMIN, USER)
 
     /**Groups Mapping*/

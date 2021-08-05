@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
 import studio.dboo.favores.modules.accounts.entity.Account;
@@ -32,24 +34,32 @@ class AccountControllerTest {
     @Autowired MockMvc mockMvc;
     @Autowired AccountService accountService;
     @Autowired AccountRepository accountRepository;
+    @Autowired PasswordEncoder passwordEncoder;
 
     @BeforeEach
     @Transactional
     public void createTestAccounts(){
         for(int i = 0; i<50; i++){
-            Account newAccount = this.createUser("test" + i, "1234","test" + i + "@test.com");
-            if(i == 0){
-                newAccount.setAge(31);
-                newAccount.setTier(5);
-                newAccount.setPoint(1000L);
-                newAccount.setAddress("제주특별자치도 제주시 독짓골2길 26 수선화아파트 마동 302호");
-            }
-            accountRepository.save(newAccount);
+            accountRepository.save(Account.builder()
+                    .username("test"+i)
+                    .password(passwordEncoder.encode("1234"))
+                    .email("test"+ i +"@test.com")
+                    .age(31)
+                    .tier(5)
+                    .point(1000L)
+                    .build());
         }
+    }
+
+    @DisplayName("테스트환경 테스트")
+    @Test
+    public void testEnvironment(){
+        System.out.println("성공!");
     }
 
     @DisplayName("계정조회_성공")
     @Test
+    @WithMockUser
     @Transactional
     public void getAccount_success() throws Exception {
         String username = "test1";
@@ -62,7 +72,6 @@ class AccountControllerTest {
     @Test
     @Transactional
     public void create_success() throws Exception {
-
     }
 
     @DisplayName("로그인_성공")
