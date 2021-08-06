@@ -35,6 +35,8 @@ dependencies {
     implementation "$boot:spring-boot-starter-data-jdbc"
     implementation "$boot:spring-boot-starter-data-jpa"
     implementation "$boot:spring-boot-starter-validation" //validation
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.3'
+
     // test
     testImplementation "$boot:spring-boot-starter-test"
     testImplementation 'org.springframework.security:spring-security-test:5.5.1'

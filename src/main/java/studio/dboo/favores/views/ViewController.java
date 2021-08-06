@@ -11,6 +11,7 @@ public class ViewController {
 
     @GetMapping("/")
     public String index(Model model, Principal principal){
+        System.out.println("root");
         transferUsernameToModel(model, principal);
         return "index";
     }
