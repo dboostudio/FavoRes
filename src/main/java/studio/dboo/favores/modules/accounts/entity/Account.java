@@ -60,10 +60,11 @@ public class Account{
 
     /** Private Info **/
     @Pattern(regexp = "^\\\\d{2,3}-\\\\d{3,4}-\\\\d{4}$", message = "핸드폰 번호의 양식이 아닙니다.")
+    private String realName; // 실명
+    private String birth; // 생년월일
     private String cellPhone; // 핸드폰번호
     private String address; // 주소
     private String sex; // 성별
-    private Integer age; // 나이
 
     /** Tier, Point **/
     private Integer tier; // 등급 : 1~5 blonze, silver, gold, platinum, diamond
@@ -71,9 +72,9 @@ public class Account{
 
     /** Logging Data Manipulation **/
     @CreationTimestamp
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     @UpdateTimestamp
-    private LocalDateTime modifyAt;
+    private LocalDateTime modifiedAt;
     private LocalDateTime droppedAt;
 
     /** Encrypt Password */

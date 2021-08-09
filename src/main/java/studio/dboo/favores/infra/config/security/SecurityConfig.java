@@ -24,25 +24,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        web.ignoring().antMatchers("/images/**");
+        web.ignoring().antMatchers("/node_modules/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+
         http.authorizeRequests()
+        //view
+                .antMatchers("/sign-up").permitAll()
+        // api
                 .antMatchers("/").permitAll()
+
                 // permitAll
                 .antMatchers(HttpMethod.GET, "/api/account/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/account/**").permitAll()
-//                .antMatchers(HttpMethod.PUT).permitAll()
-//                .antMatchers(HttpMethod.DELETE).permitAll()
+
                 // authenticated
-//                .mvcMatchers(HttpMethod.GET).authenticated()
-//                .mvcMatchers(HttpMethod.POST).authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/account/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/account/**").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
+
         http.formLogin();
         http.httpBasic();
     }
