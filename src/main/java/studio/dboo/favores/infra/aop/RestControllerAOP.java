@@ -29,7 +29,7 @@ public class RestControllerAOP {
     public void around(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        log.info("========= " + joinPoint.getTarget().getClass().getSimpleName()
+        log.info("========= FAVORES LOG START : " + joinPoint.getTarget().getClass().getSimpleName()
                 + " >> " + method.getName() + " ==========");
 
         Object[] args = joinPoint.getArgs();
@@ -40,7 +40,7 @@ public class RestControllerAOP {
         }
         for(Object obj : args){
             log.info("PARAMETER NAME : " + obj.getClass().getSimpleName()
-                    + "VALUE : " + obj);
+                    + ", VALUE : " + obj);
         }
 
         StopWatch stopWatch = new StopWatch();
@@ -52,6 +52,6 @@ public class RestControllerAOP {
 
         log.info("해당 메소드는 총 " + stopWatch.getTotalTimeSeconds() + "초 걸렸습니다.");
         log.info("결과값 : " + result);
-        log.info("========== END ==========");
+        log.info("========== FAVORES LOG END ==========");
     }
 }

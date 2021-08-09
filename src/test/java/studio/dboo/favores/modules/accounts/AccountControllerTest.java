@@ -34,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class AccountControllerTest {
 
     @Autowired MockMvc mockMvc;
@@ -134,7 +135,7 @@ class AccountControllerTest {
 
     @DisplayName("폼로그인_실패_사용자미존재")
     @Test
-    public void formLogin_fail_userNotFound() throws Exception {
+    public void formLogin_fail_user_not_found() throws Exception {
         String password = "1234";
         Account account = Account.builder()
                 .username("favores")
@@ -151,7 +152,7 @@ class AccountControllerTest {
 
     @DisplayName("폼로그인_실패_패스워드불일치")
     @Test
-    public void formLogin_fail_passwordWrong() throws Exception {
+    public void formLogin_fail_wrong_password() throws Exception {
         String password = "1234";
         Account account = Account.builder()
                 .username("favores")
@@ -173,22 +174,43 @@ class AccountControllerTest {
                 .username("dboo")
                 .password("1234")
                 .email("dboo.studio@gmail.com")
+                .role("USER")
                 .build();
 
         accountService.createAccount(account);
 
         mockMvc.perform(post("/api/account/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\":\"test1\"" +
-                        ",\"password\":\"1234\"}")
+                .content("{\"username\":\"dboo\",\"password\":\"1234\"}")
+                .accept(MediaType.APPLICATION_JSON)
                 .with(csrf()))
             .andDo(print())
             .andExpect(status().isOk());
     }
 
-    @DisplayName("로그인_실패")
+    @DisplayName("로그인_실패_사용자미존재")
     @Test
-    public void login_fail() throws Exception {
+    public void login_fail_user_not_found() throws Exception {
+        Account account = Account.builder()
+                .username("dboo")
+                .password("1234")
+                .email("dboo.studio@gmail.com")
+                .role("USER")
+                .build();
+
+        accountService.createAccount(account);
+
+        mockMvc.perform(post("/api/account/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"test1\",\"password\":\"1234\"}")
+                .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk());;
+    }
+
+    @DisplayName("로그인_실패_패스워드불일치")
+    @Test
+    public void login_fail_wrong_password() throws Exception {
         String username = "dboo";
         String password = "123";
         String email = "dboo.studio@gmail.com";

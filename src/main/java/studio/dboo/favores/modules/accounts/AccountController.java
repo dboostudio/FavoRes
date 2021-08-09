@@ -60,7 +60,6 @@ public class AccountController {
     @ApiOperation(value = "login", notes = "로그인")
     public ResponseEntity<String> login(Account account){
         accountService.login(account);
-        log.info(account.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(account.getUsername());
     }
 
