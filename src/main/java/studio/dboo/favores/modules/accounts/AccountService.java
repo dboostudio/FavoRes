@@ -32,17 +32,13 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = this.getAccount(username);
-
+//        Account account = this.getAccount(username);
+        Account account = accountRepository.findByUsername(username);
         if(account == null){
             throw new UsernameNotFoundException(username);
         }
 
-        return User.builder()
-                .username(account.getUsername())
-                .password(account.getPassword())
-                .roles(account.getRole())
-                .build();
+        return new UserAccount(account);
     }
 
     public Account createAccount(Account account){

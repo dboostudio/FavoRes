@@ -62,6 +62,7 @@ class AccountControllerTest {
     @DisplayName("계정조회_성공")
     @Test
     public void getAccount_success() throws Exception {
+        // TODO - 로그인한 계정이 본인 계정에 한해서만 조회할수 있도록 변경
         String username = "test1";
         mockMvc.perform(get("/api/account").param("username", username))
                 .andDo(print())
@@ -95,7 +96,6 @@ class AccountControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
         Account byUsername = accountRepository.findByUsername(account.getUsername());
-        System.out.println(byUsername);
     }
 
     @DisplayName("계정생성_실패(중복이름)")
@@ -108,8 +108,9 @@ class AccountControllerTest {
                 .build();
         String param = objectMapper.writeValueAsString(account);
         mockMvc.perform(post("/api/account")
-                .content(param)
-                .contentType(MediaType.APPLICATION_JSON).with(csrf()))
+                    .content(param)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
     }
@@ -117,15 +118,16 @@ class AccountControllerTest {
     @DisplayName("폼로그인_성공")
     @Test
     public void formLogin_success() throws Exception {
+        String password = "1234";
         Account account = Account.builder()
                 .username("favores")
-                .password("1234")
+                .password(password)
                 .email("favores@gmail.com")
                 .build();
 
         accountService.createAccount(account);
 
-        mockMvc.perform(formLogin().user(account.getUsername()).password(account.getPassword()))
+        mockMvc.perform(formLogin().user(account.getUsername()).password(password))
                 .andDo(print())
                 .andExpect(authenticated());
     }
@@ -133,15 +135,16 @@ class AccountControllerTest {
     @DisplayName("폼로그인_실패_사용자미존재")
     @Test
     public void formLogin_fail_userNotFound() throws Exception {
+        String password = "1234";
         Account account = Account.builder()
-                .username("favores_1")
-                .password("1234")
+                .username("favores")
+                .password(password)
                 .email("favores@gmail.com")
                 .build();
 
         accountService.createAccount(account);
 
-        mockMvc.perform(formLogin().user(account.getUsername()).password(account.getPassword() + "1"))
+        mockMvc.perform(formLogin().user(account.getUsername() + "___").password(password))
                 .andDo(print())
                 .andExpect(unauthenticated());
     }
@@ -149,15 +152,16 @@ class AccountControllerTest {
     @DisplayName("폼로그인_실패_패스워드불일치")
     @Test
     public void formLogin_fail_passwordWrong() throws Exception {
+        String password = "1234";
         Account account = Account.builder()
                 .username("favores")
-                .password("1234")
+                .password(password)
                 .email("favores@gmail.com")
                 .build();
 
         accountService.createAccount(account);
 
-        mockMvc.perform(formLogin().user(account.getUsername()).password(account.getPassword() + "1"))
+        mockMvc.perform(formLogin().user(account.getUsername()).password(password + "1"))
                 .andDo(print())
                 .andExpect(unauthenticated());
     }
