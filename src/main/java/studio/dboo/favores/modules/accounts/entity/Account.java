@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
@@ -28,9 +29,9 @@ public class Account{
     private Long id;
 
     /** Login Info **/
-    @Column(unique = true) @NotNull
+    @Column(unique = true) @NotBlank
     private String username;
-    @Column(unique = true) @NotNull @Email
+    @Column(unique = true) @Email
     private String email;
     @NotNull @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -60,7 +61,8 @@ public class Account{
 
     /** Private Info **/
     @Pattern(regexp = "^\\\\d{2,3}-\\\\d{3,4}-\\\\d{4}$", message = "핸드폰 번호의 양식이 아닙니다.")
-    private String realName; // 실명
+    private String firstname; // 실명
+    private String lastname; // 실명
     private String birth; // 생년월일
     private String cellPhone; // 핸드폰번호
     private String address; // 주소

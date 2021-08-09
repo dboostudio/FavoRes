@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import studio.dboo.favores.modules.accounts.entity.Account;
 import studio.dboo.favores.modules.annotation.RestControllerLogger;
@@ -43,13 +44,30 @@ public class AccountController {
     @PutMapping
     @ApiOperation(value = "updateAccount", notes = "계정 정보 갱신")
     public ResponseEntity<Account> updateAccount(@Valid @RequestBody Account account){
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.updateAccount(account));
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.updateAccount(account));
     }
 
     @RestControllerLogger
     @DeleteMapping
     @ApiOperation(value = "deleteAccount", notes = "계정 삭제")
     public ResponseEntity<String> deleteAccount(@CurrentAccount Account account){
+        accountService.deleteAccount(account);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @RestControllerLogger
+    @PostMapping("/login")
+    @ApiOperation(value = "login", notes = "로그인")
+    public ResponseEntity<String> login(Account account){
+        accountService.login(account);
+        log.info(account.getUsername());
+        return ResponseEntity.status(HttpStatus.OK).body(account.getUsername());
+    }
+
+    @RestControllerLogger
+    @PostMapping("/logout")
+    @ApiOperation(value = "logout", notes = "로그아웃")
+    public ResponseEntity<String> logout(Account account){
         accountService.deleteAccount(account);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

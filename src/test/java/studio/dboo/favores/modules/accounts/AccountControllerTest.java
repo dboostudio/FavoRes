@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -84,13 +85,17 @@ class AccountControllerTest {
                 .password("1234")
                 .email("favores@gmail.com")
                 .build();
-        String param = objectMapper.writeValueAsString(account);
-        System.out.println(param);
-        mockMvc.perform(post("/api/account").content("{\"username\":\"favores\",\"email\":\"favores@gmail.com\",\"password\":\"1234\",\"groups\":[]}")
+        mockMvc.perform(post("/api/account")
+                    .content("{\"username\":\"favores\"" +
+                            ",\"email\":\"favores@gmail.com\"" +
+                            ",\"password\":\"1234\",\"groups\":[]}")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk());
+        Account byUsername = accountRepository.findByUsername(account.getUsername());
+        System.out.println(byUsername);
     }
 
     @DisplayName("계정생성_실패(중복이름)")
@@ -102,22 +107,79 @@ class AccountControllerTest {
                 .email("favores@gmail.com")
                 .build();
         String param = objectMapper.writeValueAsString(account);
-        mockMvc.perform(post("/api/account").content(param).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/account")
+                .content(param)
+                .contentType(MediaType.APPLICATION_JSON).with(csrf()))
                 .andDo(print())
-                .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @DisplayName("폼로그인_성공")
+    @Test
+    public void formLogin_success() throws Exception {
+        Account account = Account.builder()
+                .username("favores")
+                .password("1234")
+                .email("favores@gmail.com")
+                .build();
+
+        accountService.createAccount(account);
+
+        mockMvc.perform(formLogin().user(account.getUsername()).password(account.getPassword()))
+                .andDo(print())
+                .andExpect(authenticated());
+    }
+
+    @DisplayName("폼로그인_실패_사용자미존재")
+    @Test
+    public void formLogin_fail_userNotFound() throws Exception {
+        Account account = Account.builder()
+                .username("favores_1")
+                .password("1234")
+                .email("favores@gmail.com")
+                .build();
+
+        accountService.createAccount(account);
+
+        mockMvc.perform(formLogin().user(account.getUsername()).password(account.getPassword() + "1"))
+                .andDo(print())
+                .andExpect(unauthenticated());
+    }
+
+    @DisplayName("폼로그인_실패_패스워드불일치")
+    @Test
+    public void formLogin_fail_passwordWrong() throws Exception {
+        Account account = Account.builder()
+                .username("favores")
+                .password("1234")
+                .email("favores@gmail.com")
+                .build();
+
+        accountService.createAccount(account);
+
+        mockMvc.perform(formLogin().user(account.getUsername()).password(account.getPassword() + "1"))
+                .andDo(print())
+                .andExpect(unauthenticated());
     }
 
     @DisplayName("로그인_성공")
     @Test
     public void login_success() throws Exception {
-        String username = "dbooa";
-        String password = "123";
-        String email = "dboo.studio@gmail.com";
-        Account user = this.createUser(username, password, email);
+        Account account = Account.builder()
+                .username("dboo")
+                .password("1234")
+                .email("dboo.studio@gmail.com")
+                .build();
 
-        mockMvc.perform(formLogin().user(user.getUsername()).password(password))
-                .andDo(print())
-                .andExpect(authenticated());
+        accountService.createAccount(account);
+
+        mockMvc.perform(post("/api/account/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"test1\"" +
+                        ",\"password\":\"1234\"}")
+                .with(csrf()))
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
     @DisplayName("로그인_실패")

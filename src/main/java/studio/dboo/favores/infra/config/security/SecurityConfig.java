@@ -33,23 +33,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeRequests()
-        //view
+        // view
                 .antMatchers("/sign-up").permitAll()
         // api
                 .antMatchers("/").permitAll()
+                // authenticated
+                .antMatchers(HttpMethod.PUT, "/api/account").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/account").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
 
                 // permitAll
-                .antMatchers(HttpMethod.GET, "/api/account/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/account/**").permitAll()
+                .antMatchers("/api/account/login", "api/account/logout").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/account").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/account").permitAll()
 
-                // authenticated
-                .antMatchers(HttpMethod.PUT, "/api/account/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/api/account/**").authenticated()
-                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.formLogin();
-        http.httpBasic();
+        http.logout()
+                .logoutSuccessUrl("/");
     }
 }
 

@@ -18,12 +18,12 @@ public class GlobalControllerAdvice {
     public ResponseEntity exception(Exception e){
 
         log.error("========== FAVORES ERROR LOG START ==========");
-        log.error("Error SimpleName : {} \n Error Message : {]", e.getClass().getSimpleName(), e.getMessage());
+        log.error("Error SimpleName : {} \n Error Message : {} \n Error StackTrace : {} ", e.getClass().getSimpleName(), e.getMessage(), e);
         log.error("========== FAVORES ERROR LOG END ============");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Exception Occurred\n" +
                         "에러 이름 : " + e.getClass().getSimpleName() + "\n" +
-                        "에러 내용 : " + e.getMessage());
+                        "에러 내용 : " + e.getMessage() + "\n");
     }
 
     // Validation 실패 시, BAD_REQUEST 리턴

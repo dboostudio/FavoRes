@@ -6,23 +6,23 @@
   <div th:replace="/fragments/header.html :: header-main"></div>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+  <script src="/js/common.js"></script>
 </head>
 <body>
   <div th:replace="/fragments/nav.html :: nav-main"/>
   <div class="container">
     <div class="row p-3">
-      <div class="col-md-2"></div>
-      <form class="col-md-auto">
+      <div class="col-sm-6">
         <p class="fs-2 py-2">로그인 정보 (필수)</p>
         <div class="mb-3">
           <label for="username" class="form-label">아이디</label>
           <input class="form-control" id="username" aria-describedby="usernameHelp">
-          <div id="usernameHelp" class="form-text">아이디는 3자 이상, 8자 이하로 입력해주세요.</div>
+          <div id="usernameHelp" class="form-text" >아이디는 3자 이상, 8자 이하로 입력해주세요.</div>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">이메일</label>
           <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-          <div id="emailHelp" class="form-text">이메일은 회원가입 확인용 및 그룹알람용으로만 활용됩니다.</div>
+          <div id="emailHelp" class="form-text" >이메일은 회원가입 확인용 및 그룹알람용으로만 활용됩니다.</div>
         </div>
         <div class="mb-3">
           <div class="row">
@@ -45,8 +45,12 @@
         <p class="fs-2 py-2">개인 정보 (선택)</p>
         <p class="fs-normal">개인정보는 사이트내 그룹 추천 및 통계외에 활용되지 않습니다.</p>
         <div class="mb-3">
-          <label for="realname" class="form-label">이름</label>
-          <input class="form-control" id="realname">
+          <label for="lastname" class="form-label">성</label>
+          <input class="form-control" id="lastname">
+        </div>
+        <div class="mb-3">
+          <label for="firstname" class="form-label">이름</label>
+          <input class="form-control" id="firstname">
         </div>
         <div class="mb-3">
           <label for="birth" class="form-label">생년월일</label>
@@ -65,16 +69,40 @@
           <input class="form-control" id="address">
         </div>
 
-        <button type="submit" class="btn btn-primary">가입하기</button>
-      </form>
-      <div class="col-md-2"></div>
+        <button class="btn btn-primary" id="submit">가입하기</button>
+      </div>
     </div>
   </div>
   <div th:replace="/fragments/footer.html :: footer"/>
 </body>
 <script>
   $(document).on('change', '#password1', function(){
-    console.log("password1changed");
+    console.log("password1changed to " + $("#password1").val());
+  })
+
+  $("#submit").on('click', function(){
+    let param = {
+      "username" : $("#username").val(),
+      "password" : $("#password1").val(),
+      "email" : $("#email").val(),
+      "lastname" : $("#lastname").val(),
+      "firstname" : $("#firstname").val(),
+      "birth" : $("#birth").val(),
+      "sex" : $("#sex").val(),
+      "cellPhone" : $("#cellPhone").val(),
+      "address" : $("#address").val()
+    }
+    console.log(param);
+    post("./api/account",JSON.stringify(param)
+            //success
+            ,function(result){console.log(result)}
+            //beforeSend
+            ,function(){console.log("beforeSend")}
+            //complete
+            ,function(){console.log("complete")}
+            //error
+            ,function(){console.log("error")}
+    );
   })
 </script>
 

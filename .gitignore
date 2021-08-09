@@ -44,3 +44,4 @@ out/
 
 ## DB Volume
 /docker-compose/mariadb/
+/src/main/resources/static/package-lock.json
