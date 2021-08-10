@@ -23,8 +23,7 @@ import java.util.Set;
 public class Account{
 
     final static String ENTER_USERNAME = "아이디를 입력해 주세요.";
-    final static String USERNAME_LENGTH_MIN = "아이디는 4자 이상이어야 합니다.";
-    final static String USERNAME_LENGTH_MAX = "아이디는 16자 이하여야 합니다.";
+    final static String USERNAME_LENGTH = "아이디는 4자 이상, 16자 이하여야 합니다.";
     final static String ENTER_PASSWORD = "비밀번호를 입력해 주세요.";
     final static String CELLPHONE_FORM_NOT_CORRECT = "010-xxxx-xxxx 의 형식에 맞춰서 입력해주세요.";
 
@@ -34,7 +33,7 @@ public class Account{
 
     /** Login Info **/
     @Column(unique = true)
-    @Min(value = 4, message = USERNAME_LENGTH_MIN) @Max(value = 16, message = USERNAME_LENGTH_MAX) @NotBlank(message = ENTER_USERNAME)
+    @Size(min=4, max=16, message = USERNAME_LENGTH) @NotBlank(message = ENTER_USERNAME)
     private String username;
 
     @Column(unique = true) @Email
