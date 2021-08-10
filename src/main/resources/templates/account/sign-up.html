@@ -92,8 +92,7 @@
       "cellPhone" : $("#cellPhone").val(),
       "address" : $("#address").val()
     }
-    console.log(param);
-    post("./api/account",JSON.stringify(param)
+    post("/api/account",param
             //success
             ,function(result){console.log(result)}
             //beforeSend

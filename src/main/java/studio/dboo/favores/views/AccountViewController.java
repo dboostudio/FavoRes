@@ -9,7 +9,7 @@ import java.security.Principal;
 @Controller
 public class AccountViewController {
 
-    @GetMapping("/sign-up")
+    @GetMapping("/account/sign-up")
     public String signUp(Model model){
         return "account/sign-up";
     }

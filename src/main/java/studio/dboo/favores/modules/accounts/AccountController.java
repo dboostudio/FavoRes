@@ -20,7 +20,6 @@ import java.net.URISyntaxException;
 @RequestMapping("api/account")
 @RequiredArgsConstructor
 @Api(tags = {"계정 CRUD"})
-@Slf4j
 public class AccountController {
 
     private final AccountService accountService;

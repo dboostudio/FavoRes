@@ -30,11 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-
         http.authorizeRequests()
         // view
-                .antMatchers("/sign-up", "/login", "/logout").permitAll()
+                .antMatchers("/account/sign-up", "/login", "/logout").permitAll()
         // api
                 .antMatchers("/").permitAll()
                 // authenticated

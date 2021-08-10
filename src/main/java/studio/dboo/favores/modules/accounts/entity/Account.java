@@ -61,10 +61,10 @@ public class Account{
 
     /** Private Info **/
     @Pattern(regexp = "^\\\\d{2,3}-\\\\d{3,4}-\\\\d{4}$", message = "핸드폰 번호의 양식이 아닙니다.")
+    private String cellPhone; // 핸드폰번호
     private String firstname; // 실명
     private String lastname; // 실명
     private String birth; // 생년월일
-    private String cellPhone; // 핸드폰번호
     private String address; // 주소
     private String sex; // 성별
 
