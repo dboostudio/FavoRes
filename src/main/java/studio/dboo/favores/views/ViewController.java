@@ -15,6 +15,14 @@ public class ViewController {
         return "index";
     }
 
+    @GetMapping("/sign-up")
+    public String signUp(Model model){
+        return "sign-up";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model){ return "login"; }
+
     @GetMapping("/admin")
     public String admin(Model model, Principal principal){
         transferUsernameToModel(model, principal);
@@ -25,11 +33,6 @@ public class ViewController {
     public String groups(Model model, Principal principal){
         transferUsernameToModel(model, principal);
         return "groups";
-    }
-
-    @GetMapping("/sign-up")
-    public String signUp(Model model){
-        return "account/sign-up";
     }
 
     private void transferUsernameToModel(Model model, Principal principal) {
