@@ -4,13 +4,7 @@
   <meta charset="UTF-8">
   <title>회원가입</title>
   <div th:replace="/fragments/header.html :: header-main"></div>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-
   <script src="/js/common.js"></script>
-
-
 
 </head>
 <body>
@@ -41,7 +35,10 @@
               <label for="password-confirm" class="form-label">비밀번호 재입력</label>
               <input type="password" class="form-control" id="password-confirm">
             </div>
-            <div class="col-1">
+            <div class="col-1 mt-3">
+              <span style="font-size: 2.3rem; color: forestgreen" id="check" class="d-none">
+                <i class="fas fa-check"></i>
+              </span>
             </div>
           </div>
           <div id="password-help" class="form-text">비밀번호는 8자이상, 20자 이하로 입력해주세요.</div>
@@ -63,7 +60,6 @@
         <div class="mb-3">
           <label for="birth" class="form-label">생년월일</label>
           <input type="text" class="form-control" id="birth">
-<!--          <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>-->
           <small id="birth-warn" class="form-text text-danger warn-message d-none">생년월일 오류</small>
         </div>
 
@@ -93,8 +89,10 @@
   $(document).on('change', '#password-confirm', function(){
     if($("#password").val() !== $("#password-confirm").val()){
       $("#password-not-match").removeClass('d-none');
+      $("#check").addClass('d-none');
     } else {
       $("#password-not-match").addClass('d-none');
+      $("#check").removeClass('d-none');
     }
   })
 
