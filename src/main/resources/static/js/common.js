@@ -1,7 +1,7 @@
 var header = $("meta[name='_csrf_header']").attr('content');
 var token = $("meta[name='_csrf']").attr('content');
 
-function post(url, json, success, beforeSend, complete, error){
+function post(url, json, success, error, beforeSend, complete){
     $.ajax({
         type: 'POST',
         contentType: 'application/json;charset=UTF-8',
@@ -23,13 +23,38 @@ function post(url, json, success, beforeSend, complete, error){
                 complete();
             }
         },
-        error: function (xhr, textStatus, e) {
+        error: function (x, t, e) { //XmlHttpRequest, textStatus, errorShown
             if ('function' === typeof (error)) {
-                error(JSON.parse(xhr.responseText), textStatus, e);
-            }
-            else {
-                console.log(xhr, textStatus, e);
+                error(x.status, JSON.parse(x.responseText));
+            } else {
+                console.log(x.status);
+                console.log(JSON.parse(x.responseText));
             }
         }
     })
+}
+
+function checkObjectType(object) {
+    let stringConstructor = "test".constructor;
+    let arrayConstructor = [].constructor;
+    let objectConstructor = ({}).constructor;
+
+    if (object === null) {
+        return "null";
+    }
+    if (object === undefined) {
+        return "undefined";
+    }
+    if (object.constructor === stringConstructor) {
+        return "String";
+    }
+    if (object.constructor === arrayConstructor) {
+        return "Array";
+    }
+    if (object.constructor === objectConstructor) {
+        return "Object";
+    }
+    {
+        return "don't know";
+    }
 }

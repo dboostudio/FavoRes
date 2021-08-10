@@ -3,17 +3,14 @@ package studio.dboo.favores.modules.accounts.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,15 +22,24 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Account{
 
+    final static String ENTER_USERNAME = "아이디를 입력해 주세요.";
+    final static String USERNAME_LENGTH_MIN = "아이디는 4자 이상이어야 합니다.";
+    final static String USERNAME_LENGTH_MAX = "아이디는 16자 이하여야 합니다.";
+    final static String ENTER_PASSWORD = "비밀번호를 입력해 주세요.";
+    final static String CELLPHONE_FORM_NOT_CORRECT = "010-xxxx-xxxx 의 형식에 맞춰서 입력해주세요.";
+
+
     @Id @GeneratedValue
     private Long id;
 
     /** Login Info **/
-    @Column(unique = true) @NotBlank
+    @Column(unique = true)
+    @Min(value = 4, message = USERNAME_LENGTH_MIN) @Max(value = 16, message = USERNAME_LENGTH_MAX) @NotBlank(message = ENTER_USERNAME)
     private String username;
+
     @Column(unique = true) @Email
     private String email;
-    @NotNull @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull(message = ENTER_PASSWORD) @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @JsonIgnore
     private String role; //권한 (ADMIN, USER)
@@ -60,10 +66,10 @@ public class Account{
 //    }
 
     /** Private Info **/
-    @Pattern(regexp = "^\\\\d{2,3}-\\\\d{3,4}-\\\\d{4}$", message = "핸드폰 번호의 양식이 아닙니다.")
+    @Nullable @Pattern(regexp = "^\\\\d{2,3}-\\\\d{3,4}-\\\\d{4}$", message = CELLPHONE_FORM_NOT_CORRECT)
     private String cellPhone; // 핸드폰번호
-    private String firstname; // 실명
-    private String lastname; // 실명
+    private String firstname; // 성
+    private String lastname; // 이름
     private String birth; // 생년월일
     private String address; // 주소
     private String sex; // 성별

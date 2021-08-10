@@ -27,6 +27,11 @@ public class ViewController {
         return "groups";
     }
 
+    @GetMapping("/sign-up")
+    public String signUp(Model model){
+        return "account/sign-up";
+    }
+
     private void transferUsernameToModel(Model model, Principal principal) {
         if(principal == null){
             model.addAttribute("username", "Welcome To FavoRes");

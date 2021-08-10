@@ -1,4 +1,4 @@
-package studio.dboo.favores.infra.config.swagger;
+package studio.dboo.favores.infra.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

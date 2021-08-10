@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,28 +26,7 @@ class ViewControllerTest {
     public void index_anonymous() throws Exception {
         mockMvc.perform(get("/"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"));
     }
-
-    @TestWithUser
-    public void index_user() throws Exception {
-        mockMvc.perform(get("/"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @TestWithUser
-    public void admin_user() throws Exception {
-        mockMvc.perform(get("/admin"))
-                .andDo(print())
-                .andExpect(status().isForbidden()); //403 forbidden
-    }
-
-    @TestWithAdmin
-    public void admin_admin() throws Exception {
-        mockMvc.perform(get("/admin"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
 }

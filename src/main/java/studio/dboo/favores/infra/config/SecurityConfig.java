@@ -1,4 +1,4 @@
-package studio.dboo.favores.infra.config.security;
+package studio.dboo.favores.infra.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
         // view
-                .antMatchers("/account/sign-up", "/login", "/logout").permitAll()
+                .antMatchers("/sign-up", "/login", "/logout").permitAll()
         // api
                 .antMatchers("/").permitAll()
                 // authenticated

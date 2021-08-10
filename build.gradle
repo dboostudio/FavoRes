@@ -51,6 +51,10 @@ dependencies {
 
     testCompileOnly lombok
     testAnnotationProcessor lombok
+
+//    ETC
+    implementation 'com.google.code.gson:gson:2.8.6' //json처리
+
 }
 
 test {
