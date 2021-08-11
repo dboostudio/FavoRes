@@ -58,3 +58,8 @@ function checkObjectType(object) {
         return "don't know";
     }
 }
+
+function moveViewToTag(tagObject, duration){
+    if(!duration){ duration = 50 }
+    $('html, body').animate({scrollTop : tagObject.offset()}, duration)
+}

@@ -10,9 +10,11 @@
 <body>
   <div th:replace="/fragments/nav.html :: nav-main"/>
   <div class="container">
-    <div class="row justify-content-center p-3">
-      <div class="col-6">
-        <p class="fs-2 py-2">로그인 정보 (필수)</p>
+    <div class="row justify-content-center d-flex">
+      <div class="col-7 p-4 m-5 border border-dark rounded justify-content-center" >
+        <p class="fs-2 mb-3">회원가입</p>
+        <div class="dropdown-divider mb-3"></div>
+        <p class="fs-4 mb-3">로그인 정보 (필수)</p>
         <div class="mb-3">
           <label for="username" class="form-label">아이디</label>
           <input class="form-control" id="username" aria-describedby="username-help">
@@ -45,8 +47,9 @@
           <small id="password-warn" class="form-text text-danger warn-message d-none">비밀번호 오류</small>
           <small id="password-not-match" class="form-text text-danger warn-message d-none">비밀번호가 일치하지 않습니다.</small>
         </div>
-        <p class="fs-2 py-2">개인 정보 (선택)</p>
-        <p class="fs-normal">- 개인정보는 사이트내 그룹 추천 및 통계외에 활용되지 않습니다.</p>
+        <div class="dropdown-divider mb-3"></div>
+        <p class="fs-4">개인 정보 (선택)</p>
+        <p class="fs-normal mb-3">- 개인정보는 사이트내 그룹 추천 및 통계외에 활용되지 않습니다.</p>
         <div class="row">
           <div class="col mb-3">
             <label for="lastname" class="form-label">성</label>
@@ -76,8 +79,10 @@
           <label for="address" class="form-label">주소</label>
           <input class="form-control" id="address">
         </div>
-
-        <button class="btn btn-primary" id="submit">가입하기</button>
+        <div class="dropdown-divider mb-3"></div>
+        <div class="d-grid mx-auto col-4">
+          <button class="btn btn-primary btn-lg" id="submit">가입하기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -88,9 +93,11 @@
 
   $(document).on('change', '#password-confirm', function(){
     if($("#password").val() !== $("#password-confirm").val()){
+      $("#password-confirm").addClass('border').addClass('border-danger');
       $("#password-not-match").removeClass('d-none');
       $("#check").addClass('d-none');
     } else {
+      $("#password-confirm").removeClass('border').removeClass('border-danger');
       $("#password-not-match").addClass('d-none');
       $("#check").removeClass('d-none');
     }
@@ -98,7 +105,13 @@
 
   $("#submit").on('click', function(){
     let param = {};
-    $("input").each(
+    if($("#password").val() !== $("#password-confirm").val()) {
+      $("#password-confirm").addClass('border').addClass('border-danger').focus();
+      $("#password-not-match").removeClass('d-none');
+      moveViewToTag($("#password"));
+      return;
+    }
+      $('input').each(
       function(){
         let field = $(this).attr('id');
         let value = $(this).val();
@@ -112,12 +125,13 @@
               window.location.href="/login";
             }
             ,function(status, responseText){
-              hideAllWarnMessages();
+              hideAllWarning();
               if(checkObjectType(responseText) == "Array"){
                 $(responseText).each(function(index){
                   let field = responseText[index]["field"];
                   let message = responseText[index]["message"];
                   $(`.warn-message[id=${field}-warn]`).text(message).removeClass('d-none');
+                  $(`input[id=${field}]`).addClass('border').addClass('border-danger');
                 })
               } else {
                 console.log(responseText);
@@ -126,11 +140,12 @@
     );
   })
 
-  function hideAllWarnMessages(){
+  function hideAllWarning(){
+    $('input').each(function(){
+      $(this).removeClass('border').removeClass('border-danger');
+    })
     $('.warn-message').each(function(){
-      if(!$(this).hasClass('d-none')){
-        $(this).addClass('d-none')
-      }
+      $(this).addClass('d-none');
     });
   }
 

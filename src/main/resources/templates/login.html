@@ -4,33 +4,58 @@
   <meta charset="UTF-8">
   <title>로그인</title>
   <div th:replace="/fragments/header.html :: header-main"></div>
+  <script src="/js/common.js"></script>
+
 </head>
 <body>
-<div th:replace="/fragments/nav.html :: nav-main"/>
-<div class="container">
-  <div class="row justify-content-center p-3">
-    <div class="col-4 mt-5">
-      <p class="fs-2 py-2">로그인</p>
-      <div class="mb-3">
-        <label for="username" class="form-label">아이디</label>
-        <input class="form-control" id="username" aria-describedby="username-help">
-        <small id="username-warn" class="form-text text-danger warn-message d-none">아이디 오류</small>
+  <div th:replace="/fragments/nav.html :: nav-main"/>
+  <div class="container">
+    <div class="row justify-content-center p-3">
+      <div class="col-4 p-3 m-5 border border-dark rounded" >
+        <p class="fs-2 py-2">로그인</p>
+        <div class="mb-3">
+          <label for="username" class="form-label">아이디</label>
+          <input class="form-control" id="username" aria-describedby="username-help">
+          <small id="username-warn" class="form-text text-danger warn-message d-none">아이디 오류</small>
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">패스워드</label>
+          <input class="form-control" id="password" aria-describedby="password-help">
+          <small id="password-warn" class="form-text text-danger warn-message d-none">패스워드 오류</small>
+        </div>
+        <div class="d-grid gap-2">
+          <a id="login-button" class="btn btn-primary">로그인</a>
+          <a id="signUp" class="btn btn-outline-warning" th:href="@{/sign-up}">가입하기</a>
+        <div>
+        <div class="dropdown-divider"></div>
+        <div class="d-grid mx-auto gap-2 col-8">
+          <a id="login-button-g" class="btn btn-outline-primary">
+            <div class="row">
+              <div class="col-2"><i class="fab fa-google"></i></div>
+              <div class="col">Google 로그인</div>
+            </div>
+          </a>
+          <a id="login-button-f" class="btn btn-outline-primary">
+            <div class="row">
+              <div class="col-2"><i class="fab fa-facebook-square"></i></div>
+              <div class="col">facebook 로그인</div>
+            </div>
+          </a>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="username" class="form-label">패스워드</label>
-        <input class="form-control" id="password" aria-describedby="password-help">
-        <small id="password-warn" class="form-text text-danger warn-message d-none">패스워드 오류</small>
-      </div>
-      <div class="d-grid gap-2">
-        <button id="loginBtn" class="btn btn-primary">로그인</button>
-        <button id="loginBtna" class="btn btn-primary">로그인</button>
-        <button id="loginBtnb" class="btn btn-primary">로그인</button>
-        <button id="loginBtnc" class="btn btn-primary">로그인</button>
-      </div>
-
     </div>
   </div>
-</div>
-<div th:replace="/fragments/footer.html :: footer"/>
+  <div th:replace="/fragments/footer.html :: footer"/>
 </body>
+<script>
+  $("#login-button").on("click", function(){
+    let param={};
+    param['username'] = $("#username").val();
+    param['password'] = $("#password").val();
+    post
+    ("/login", param
+            ,function(result){console.log(result)}
+    )
+  })
+</script>
 </html>

@@ -20,14 +20,18 @@ public class GlobalControllerAdvice {
     // 핸들러가 설정되지 않은 오류일 시, INTERNAL_SERVER_ERROR 리턴
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity exception(Exception e){
+        JsonArray result = new JsonArray();
+        JsonObject jsonObject = new JsonObject();
 
         log.error("========== FAVORES ERROR LOG START ==========");
         log.error("Error SimpleName : {} \n Error Message : {} \n Error StackTrace : {} ", e.getClass().getSimpleName(), e.getMessage(), e);
         log.error("========== FAVORES ERROR LOG END ============");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Exception Occurred\n" +
-                        "에러 이름 : " + e.getClass().getSimpleName() + "\n" +
-                        "에러 내용 : " + e.getMessage() + "\n");
+
+        jsonObject.addProperty("field", e.getClass().getSimpleName());
+        jsonObject.addProperty("message", e.getMessage());
+        result.add(jsonObject);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result.toString());
     }
 
     // Validation 실패 시, BAD_REQUEST 리턴
