@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalControllerAdvice {
     // 핸들러가 설정되지 않은 오류일 시, INTERNAL_SERVER_ERROR 리턴
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity exception(Exception e){
+    public ResponseEntity globalExceptionHandler(Exception e){
         JsonArray result = new JsonArray();
         JsonObject jsonObject = new JsonObject();
 
@@ -36,7 +36,7 @@ public class GlobalControllerAdvice {
 
     // Validation 실패 시, BAD_REQUEST 리턴
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity methodArgumentNotValidException(MethodArgumentNotValidException e) throws JsonProcessingException {
+    public ResponseEntity methodArgNotValidExceptionHandler(MethodArgumentNotValidException e) throws JsonProcessingException {
         JsonArray result = new JsonArray();
         BindingResult bindingResult = e.getBindingResult();
         bindingResult.getAllErrors().forEach( error -> {

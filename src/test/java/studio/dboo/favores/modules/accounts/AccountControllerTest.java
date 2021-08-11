@@ -22,6 +22,7 @@ import javax.transaction.Transactional;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
@@ -83,7 +84,7 @@ class AccountControllerTest {
     @Test
     public void createAccount_success() throws Exception {
         Account account = Account.builder()
-                .username("favores")
+                .username("test")
                 .password("1234")
                 .email("favores@gmail.com")
                 .build();
@@ -96,14 +97,14 @@ class AccountControllerTest {
                     .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk());
-        Account byUsername = accountRepository.findByUsername(account.getUsername());
+        Optional<Account> byUsername = accountRepository.findByUsername(account.getUsername());
     }
 
     @DisplayName("계정생성_실패(중복이름)")
     @Test
     public void createAccount_fail() throws Exception {
         Account account  = Account.builder()
-                .username("test1")
+                .username("test")
                 .password("1234")
                 .email("favores@gmail.com")
                 .build();
@@ -121,7 +122,7 @@ class AccountControllerTest {
     public void formLogin_success() throws Exception {
         String password = "1234";
         Account account = Account.builder()
-                .username("favores")
+                .username("test")
                 .password(password)
                 .email("favores@gmail.com")
                 .build();
@@ -138,7 +139,7 @@ class AccountControllerTest {
     public void formLogin_fail_user_not_found() throws Exception {
         String password = "1234";
         Account account = Account.builder()
-                .username("favores")
+                .username("test")
                 .password(password)
                 .email("favores@gmail.com")
                 .build();
@@ -155,7 +156,7 @@ class AccountControllerTest {
     public void formLogin_fail_wrong_password() throws Exception {
         String password = "1234";
         Account account = Account.builder()
-                .username("favores")
+                .username("test")
                 .password(password)
                 .email("favores@gmail.com")
                 .build();
@@ -171,13 +172,13 @@ class AccountControllerTest {
     @Test
     public void login_success() throws Exception {
         Account account = Account.builder()
-                .username("dboo")
+                .username("test")
                 .password("1234")
-                .email("dboo.studio@gmail.com")
+                .email("test@gmail.com")
                 .role("USER")
                 .build();
 
-        accountService.createAccount(account);
+//        accountService.createAccount(account);
 
         mockMvc.perform(post("/api/account/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -192,9 +193,9 @@ class AccountControllerTest {
     @Test
     public void login_fail_user_not_found() throws Exception {
         Account account = Account.builder()
-                .username("dboo")
+                .username("test")
                 .password("1234")
-                .email("dboo.studio@gmail.com")
+                .email("test@gmail.com")
                 .role("USER")
                 .build();
 
@@ -211,9 +212,9 @@ class AccountControllerTest {
     @DisplayName("로그인_실패_패스워드불일치")
     @Test
     public void login_fail_wrong_password() throws Exception {
-        String username = "dboo";
+        String username = "test";
         String password = "123";
-        String email = "dboo.studio@gmail.com";
+        String email = "test@gmail.com";
         this.createUser(username, password, email);
 
         mockMvc.perform(formLogin().user(username).password(password+"0"))

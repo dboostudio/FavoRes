@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>회원가입</title>
-  <div th:replace="/fragments/header.html :: header-main"></div>
-  <script src="/js/common.js"></script>
-
-</head>
+<head th:replace="/fragments/head.html :: head"/>
 <body>
   <div th:replace="/fragments/nav.html :: nav-main"/>
   <div class="container">
@@ -23,7 +17,7 @@
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">이메일</label>
-          <input type="email" class="form-control" id="email" aria-describedby="email-help" placeholder="favores.2021@gmail.com">
+          <input type="email" class="form-control" id="email" aria-describedby="email-help" placeholder="email@gmail.com">
           <div id="email-help" class="form-text" >이메일은 회원가입 확인용 및 그룹알람용으로만 활용됩니다.</div>
           <small id="email-warn" class="form-text text-danger warn-message d-none">이메일 오류</small>
         </div>

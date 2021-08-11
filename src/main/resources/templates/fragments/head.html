@@ -1,6 +1,8 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="header-main">
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title>FavoRes</title>
 
     <!--  csrf meta tag  -->
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
@@ -24,6 +26,14 @@
         <!--  font-awesome  -->
     <script src="https://kit.fontawesome.com/dba50df964.js" crossorigin="anonymous"></script>
 
+    <!-- js import -->
+    <script src="/js/common.js"></script>
 
+    <!-- Style -->
+    <style>
+        .container {
+            max-width: 100%;
+        }
+    </style>
 </head>
 </html>

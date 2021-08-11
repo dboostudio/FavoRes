@@ -1,31 +1,57 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+
+</head>
 
 <!--nav main-->
 <div th:fragment="nav-main">
-    <header class="p-3 bg-dark text-white">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <img src="/images/logo_favores.png" th:href="@{/}" />
-<!--                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>-->
-                </a>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark px-3">
+        <div class="container-fluid">
+            <a href="/" class="navbar-brand" th:href="@{/}">
+                <img src="/images/logo_favores.png"/>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-<!--                    <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>-->
-                    <li><a class="nav-link px-2 text-white" th:href="@{/groups}">그룹</a></li>
+            <div class="collapse navbar-collapse" id="navbarsExample04">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <!--            <li class="nav-item">-->
+                    <!--                <a class="nav-link active" aria-current="page" href="#">Home</a>-->
+                    <!--            </li>-->
+                    <!--            <li class="nav-item">-->
+                    <!--                <a class="nav-link" href="#">Link</a>-->
+                    <!--            </li>-->
+                    <!--            <li class="nav-item">-->
+                    <!--                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>-->
+                    <!--            </li>-->
+                    <!--            <li class="nav-item dropdown">-->
+                    <!--                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>-->
+                    <!--                <ul class="dropdown-menu" aria-labelledby="dropdown04">-->
+                    <!--                    <li><a class="dropdown-item" href="#">Action</a></li>-->
+                    <!--                    <li><a class="dropdown-item" href="#">Another action</a></li>-->
+                    <!--                    <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+                    <!--                </ul>-->
+                    <!--            </li>-->
                 </ul>
-
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                    <input type="search" class="form-control form-control-dark" placeholder="그룹 검색..." aria-label="Search">
-                </form>
-
-                <div class="text-end">
-                    <a type="button" class="btn btn-outline-light me-2" th:href="@{/login}">로그인</a>
-                    <a class="btn btn-warning" th:href="@{/sign-up}">회원가입</a>
+                <div class="mx-3 d-flex justify-content-center">
+                    <a type="form-control button" class="btn btn-outline-light me-2" sec:authorize="!isAuthenticated()" th:href="@{/login}">로그인</a>
+                    <a type="form-control button" class="btn btn-warning" sec:authorize="!isAuthenticated()" th:href="@{/sign-up}">회원가입</a>
+                    <div class="dropdown" sec:authorize="isAuthenticated()">
+                        <a class="dropdown-toggle btn btn-dark" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown">Dropdown</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </header>
+    </nav>
 </div>
 </html>

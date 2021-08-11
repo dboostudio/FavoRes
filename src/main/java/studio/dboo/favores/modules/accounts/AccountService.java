@@ -1,21 +1,19 @@
 package studio.dboo.favores.modules.accounts;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 import studio.dboo.favores.modules.accounts.entity.Account;
 import studio.dboo.favores.modules.accounts.object.UserAccount;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +30,8 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        Account account = this.getAccount(username);
-        Account account = accountRepository.findByUsername(username);
-        if(account == null){
-            throw new UsernameNotFoundException(username);
-        }
-
+        Optional<Account> byUsername = accountRepository.findByUsername(username);
+        Account account = byUsername.orElseThrow(()-> new UsernameNotFoundException(username));
         return new UserAccount(account);
     }
 
@@ -51,11 +45,8 @@ public class AccountService implements UserDetailsService {
     }
 
     public Account getAccount(String username){
-        Account account = accountRepository.findByUsername(username);
-        if(account == null){
-            throw new UsernameNotFoundException(username);
-        }
-
+        Optional<Account> byUsername = accountRepository.findByUsername(username);
+        Account account = byUsername.orElseThrow(()-> new UsernameNotFoundException(username));
         return account;
     }
 
@@ -75,10 +66,10 @@ public class AccountService implements UserDetailsService {
     }
 
     public void login(Account account) {
-        Account byUsername = accountRepository.findByUsername(account.getUsername());
-        if(byUsername == null){
-            throw new UsernameNotFoundException(account.getUsername());
-        } else if(passwordEncoder.matches(account.getPassword(),byUsername.getPassword())){
+        Optional<Account> byUsername = accountRepository.findByUsername(account.getUsername());
+        Account getAccount = byUsername.orElseThrow(()-> new UsernameNotFoundException(account.getUsername()));
+
+        if(!passwordEncoder.matches(account.getPassword(),getAccount.getPassword())){
             throw new RuntimeException(PASSWORD_NOT_MATCH);
         }
 

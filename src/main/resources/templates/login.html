@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>로그인</title>
-  <div th:replace="/fragments/header.html :: header-main"></div>
-  <script src="/js/common.js"></script>
-
-</head>
+<head th:replace="/fragments/head.html :: head"/>
 <body>
   <div th:replace="/fragments/nav.html :: nav-main"/>
   <div class="container">
-    <div class="row justify-content-center p-3">
+    <div class="row d-flex justify-content-center p-3">
       <div class="col-4 p-3 m-5 border border-dark rounded" >
         <p class="fs-2 py-2">로그인</p>
         <div class="mb-3">
@@ -20,11 +14,11 @@
         </div>
         <div class="mb-3">
           <label for="username" class="form-label">패스워드</label>
-          <input class="form-control" id="password" aria-describedby="password-help">
+          <input type="password" class="form-control" id="password" aria-describedby="password-help">
           <small id="password-warn" class="form-text text-danger warn-message d-none">패스워드 오류</small>
         </div>
         <div class="d-grid gap-2">
-          <a id="login-button" class="btn btn-primary">로그인</a>
+          <button type="submit" id="login-button" class="btn btn-primary">로그인</button>
           <a id="signUp" class="btn btn-outline-warning" th:href="@{/sign-up}">가입하기</a>
         <div>
         <div class="dropdown-divider"></div>
@@ -52,10 +46,8 @@
     let param={};
     param['username'] = $("#username").val();
     param['password'] = $("#password").val();
-    post
-    ("/login", param
-            ,function(result){console.log(result)}
-    )
+    post("/api/account/login", param
+            ,function(result){console.log(result)})
   })
 </script>
 </html>
