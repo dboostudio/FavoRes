@@ -51,14 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     ,"/api/account/authenticate");
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("dofilterInternal ========");
-        log.info("request servlet path: " + request.getServletPath());
-
-        if(shouldNotFilter(request)){
-            return;
-        }
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain){
         String jwt = subStringPrefix(request);
         jwtTokenUtil.validateJwtToken(jwt);
         if(StringUtils.hasText(jwt)){
@@ -82,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request){
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         for(String urlPattern : EXCLUDE_URL){
             if(antPathMatcher.match(urlPattern, request.getServletPath())){
