@@ -46,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
 
     private List<String> EXCLUDE_URL = List.of(
-                    "/","/view/**", "/static/**", "/css/**", "/js/**", "/images/**", "/node_modules/**"
+                    "/","/view/**", "/static/**", "/css/**", "/js/**", "/images/**", "/node_modules/**", "/favicon.ico"
                     ,"/api/account"
                     ,"/api/account/authenticate");
 
