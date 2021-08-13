@@ -1,27 +1,40 @@
 package studio.dboo.favores.modules.accounts;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import studio.dboo.favores.infra.jwt.JwtTokenUtil;
 import studio.dboo.favores.modules.accounts.entity.Account;
 import studio.dboo.favores.modules.accounts.object.UserAccount;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
 
-    /** Bean */
-    private final AccountRepository accountRepository;
+    /** Bean Injection */
     private final PasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
+    private AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     /** Constant */
     private static final String CANNOT_FIND_USER = "해당 유저명으로 가입된 계정이 없습니다.";
@@ -65,18 +78,24 @@ public class AccountService implements UserDetailsService {
         accountRepository.delete(account);
     }
 
-    public void login(Account account) {
+    public Account authenticateAccount(Account account) {
         Optional<Account> byUsername = accountRepository.findByUsername(account.getUsername());
         Account getAccount = byUsername.orElseThrow(()-> new UsernameNotFoundException(account.getUsername()));
 
         if(!passwordEncoder.matches(account.getPassword(),getAccount.getPassword())){
-            throw new RuntimeException(PASSWORD_NOT_MATCH);
+            throw new BadCredentialsException(PASSWORD_NOT_MATCH);
         }
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                new UserAccount(account),
-                account.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER")));
-        SecurityContextHolder.getContext().setAuthentication(token);
+        return account;
+    }
+
+    public String generateJwtToken(Account account) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(account.getUsername(), account.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Optional<String> nullableToken = jwtTokenUtil.generateJwtToken(authentication);
+        String token = nullableToken.orElseThrow(()->new RuntimeException("토큰 발급 에러"));
+        return token;
     }
 }

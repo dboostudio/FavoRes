@@ -1,8 +1,8 @@
 package studio.dboo.favores.modules.accounts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.Getter;
+import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,21 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpServerErrorException;
 import studio.dboo.favores.modules.accounts.entity.Account;
 
 import javax.transaction.Transactional;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +34,9 @@ class AccountControllerTest {
     @Autowired AccountRepository accountRepository;
     @Autowired PasswordEncoder passwordEncoder;
     @Autowired ObjectMapper objectMapper;
+
+    @Getter @Setter
+    private String jwtToken = "";
 
     @BeforeEach
     public void createTestAccounts(){
@@ -83,36 +77,25 @@ class AccountControllerTest {
     @DisplayName("계정생성_성공")
     @Test
     public void createAccount_success() throws Exception {
-        Account account = Account.builder()
-                .username("test")
-                .password("1234")
-                .email("favores@gmail.com")
-                .build();
         mockMvc.perform(post("/api/account")
-                    .content("{\"username\":\"favores\"" +
-                            ",\"email\":\"favores@gmail.com\"" +
+                    .content("{\"username\":\"test\"" +
+                            ",\"email\":\"test@gmail.com\"" +
                             ",\"password\":\"1234\",\"groups\":[]}")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .with(csrf()))
+                    .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-        Optional<Account> byUsername = accountRepository.findByUsername(account.getUsername());
     }
 
     @DisplayName("계정생성_실패(중복이름)")
     @Test
     public void createAccount_fail() throws Exception {
-        Account account  = Account.builder()
-                .username("test")
-                .password("1234")
-                .email("favores@gmail.com")
-                .build();
-        String param = objectMapper.writeValueAsString(account);
         mockMvc.perform(post("/api/account")
-                    .content(param)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .with(csrf()))
+                .content("{\"username\":\"test\"" +
+                        ",\"email\":\"test@gmail.com\"" +
+                        ",\"password\":\"1234\",\"groups\":[]}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
     }
@@ -168,7 +151,7 @@ class AccountControllerTest {
                 .andExpect(unauthenticated());
     }
 
-    @DisplayName("로그인_성공")
+    @DisplayName("JWT 인증토큰발급_성공")
     @Test
     public void login_success() throws Exception {
         Account account = Account.builder()
@@ -178,13 +161,12 @@ class AccountControllerTest {
                 .role("USER")
                 .build();
 
-//        accountService.createAccount(account);
+        accountService.createAccount(account);
 
         mockMvc.perform(post("/api/account/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\":\"dboo\",\"password\":\"1234\"}")
-                .accept(MediaType.APPLICATION_JSON)
-                .with(csrf()))
+                .content("{\"username\":\"test\",\"password\":\"1234\"}")
+                .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk());
     }
@@ -203,8 +185,7 @@ class AccountControllerTest {
 
         mockMvc.perform(post("/api/account/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\":\"test1\",\"password\":\"1234\"}")
-                .with(csrf()))
+                .content("{\"username\":\"test1\",\"password\":\"1234\"}"))
                 .andDo(print())
                 .andExpect(status().isOk());;
     }

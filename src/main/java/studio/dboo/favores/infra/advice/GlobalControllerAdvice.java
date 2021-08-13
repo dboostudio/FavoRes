@@ -51,6 +51,6 @@ public class GlobalControllerAdvice {
             result.add(jsonObject);
             log.error("========== FAVORES ERROR LOG END ============");
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.toString());
+        return ResponseEntity.badRequest().body(result.toString());
     }
 }

@@ -1,13 +1,14 @@
 package studio.dboo.favores.modules.accounts;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import studio.dboo.favores.infra.jwt.JwtTokenUtil;
 import studio.dboo.favores.modules.accounts.entity.Account;
 import studio.dboo.favores.modules.annotation.RestControllerLogger;
 
@@ -23,6 +24,7 @@ import java.net.URISyntaxException;
 public class AccountController {
 
     private final AccountService accountService;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @RestControllerLogger
     @GetMapping
@@ -56,17 +58,25 @@ public class AccountController {
 
     @RestControllerLogger
     @PostMapping("/login")
-    @ApiOperation(value = "login", notes = "로그인")
-    public ResponseEntity<String> login(Account account){
-        accountService.login(account);
-        return ResponseEntity.status(HttpStatus.OK).body(account.getUsername());
+    @ApiOperation(value = "authenticate", notes = "JWT 인증토큰발급")
+    public ResponseEntity<?> authenticate(@RequestBody Account account){
+        accountService.authenticateAccount(account);
+        String token = accountService.generateJwtToken(account);
+
+        JsonArray result = new JsonArray();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("token", token);
+        result.add(jsonObject);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result.toString());
     }
 
     @RestControllerLogger
     @PostMapping("/logout")
     @ApiOperation(value = "logout", notes = "로그아웃")
     public ResponseEntity<String> logout(Account account){
-        accountService.deleteAccount(account);
+        // TODO - 로그아웃 처리(jwt 토큰을 만기처리)
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
