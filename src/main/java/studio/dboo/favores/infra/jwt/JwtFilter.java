@@ -28,18 +28,8 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     /** Bean Injection */
-    private AccountService accountService;
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    public void setAccountService(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
-    @Autowired
-    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
+    private final AccountService accountService;
+    private final JwtTokenUtil jwtTokenUtil;
 
     /** Constant */
     public static final String AUTHORIZATION_HEADER = "Authorization";

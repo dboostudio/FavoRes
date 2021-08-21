@@ -1,5 +1,5 @@
-var header = $("meta[name='_csrf_header']").attr('content');
-var token = $("meta[name='_csrf']").attr('content');
+// var header = $("meta[name='_csrf_header']").attr('content');
+// var token = $("meta[name='_csrf']").attr('content');
 
 function post(url, json, success, error, beforeSend, complete){
     $.ajax({
@@ -8,7 +8,7 @@ function post(url, json, success, error, beforeSend, complete){
         url: url,
         data: JSON.stringify(json),
         beforeSend : function (xhr) {
-            xhr.setRequestHeader(header, token)
+            // xhr.setRequestHeader(header, token)
             if('function' === typeof (beforeSend)){
                 beforeSend();
             }

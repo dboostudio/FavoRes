@@ -28,13 +28,8 @@ public class AccountService implements UserDetailsService {
     /** Bean Injection */
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
 
     /** Constant */
     private static final String CANNOT_FIND_USER = "해당 유저명으로 가입된 계정이 없습니다.";
