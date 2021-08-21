@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,7 +29,7 @@ public class AccountService implements UserDetailsService {
     /** Bean Injection */
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenUtil jwtTokenUtil;
 
     /** Constant */
@@ -73,7 +74,8 @@ public class AccountService implements UserDetailsService {
         accountRepository.delete(account);
     }
 
-    public Account authenticateAccount(Account account) {
+    public String getJwtTokenFromAccount(Account account) {
+        // 아이디, 패스워드 체크
         Optional<Account> byUsername = accountRepository.findByUsername(account.getUsername());
         Account getAccount = byUsername.orElseThrow(()-> new UsernameNotFoundException(account.getUsername()));
 
@@ -81,16 +83,15 @@ public class AccountService implements UserDetailsService {
             throw new BadCredentialsException(PASSWORD_NOT_MATCH);
         }
 
-        return account;
-    }
-
-    public String generateJwtToken(Account account) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(account.getUsername(), account.getPassword()));
+        // 아이디 패스워드 일치 시, jwt토큰을 발급하여 리턴
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(account.getUsername(), account.getPassword());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Optional<String> nullableToken = jwtTokenUtil.generateJwtToken(authentication);
-        String token = nullableToken.orElseThrow(()->new RuntimeException("토큰 발급 에러"));
+        Optional<String> optionalJwt = jwtTokenUtil.generateJwtToken(authentication);
+        String token = optionalJwt.orElseThrow(() -> new RuntimeException());
+
         return token;
     }
 }

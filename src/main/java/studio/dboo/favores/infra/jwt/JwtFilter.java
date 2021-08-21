@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -28,7 +29,6 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     /** Bean Injection */
-    private final AccountService accountService;
     private final JwtTokenUtil jwtTokenUtil;
 
     /** Constant */
@@ -41,19 +41,14 @@ public class JwtFilter extends OncePerRequestFilter {
                     ,"/api/account/authenticate");
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain){
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = subStringPrefix(request);
         jwtTokenUtil.validateJwtToken(jwt);
         if(StringUtils.hasText(jwt)){
-            String username = jwtTokenUtil.getUsernameFromJwtToken(jwt);
-
-            UserDetails userDetails = accountService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+            Authentication authentication = jwtTokenUtil.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        filterChain.doFilter(request, response);
     }
 
     private String subStringPrefix(HttpServletRequest request) {
@@ -73,6 +68,5 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         return false;
-//        return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath())); //antMatcher패턴을 사용할수 없어서 위와 같이 변경
     }
 }
