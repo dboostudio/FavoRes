@@ -1,7 +1,5 @@
 package studio.dboo.favores.modules.accounts;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import studio.dboo.favores.infra.jwt.JwtFilter;
-import studio.dboo.favores.infra.jwt.JwtTokenUtil;
 import studio.dboo.favores.modules.accounts.entity.Account;
 import studio.dboo.favores.modules.annotation.RestControllerLogger;
 
@@ -61,11 +58,10 @@ public class AccountController {
     @PostMapping("/login")
     @ApiOperation(value = "authenticate", notes = "JWT 인증토큰발급")
     public ResponseEntity<?> authenticate(@RequestBody Account account){
-        accountService.getJwtTokenFromAccount(account);
-        String token = accountService.getJwtTokenFromAccount(account);
+        String token = accountService.loginAndGenerateToken(account);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer" + token);
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
 
         return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(account);
     }

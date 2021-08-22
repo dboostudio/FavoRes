@@ -74,21 +74,22 @@ public class AccountService implements UserDetailsService {
         accountRepository.delete(account);
     }
 
-    public String getJwtTokenFromAccount(Account account) {
-        // 아이디, 패스워드 체크
+    public String loginAndGenerateToken(Account account) {
+        // 가입여부, 패스워드 체크
         Optional<Account> byUsername = accountRepository.findByUsername(account.getUsername());
-        Account getAccount = byUsername.orElseThrow(()-> new UsernameNotFoundException(account.getUsername()));
+        Account savedAccount = byUsername.orElseThrow(()-> new UsernameNotFoundException(account.getUsername()));
 
-        if(!passwordEncoder.matches(account.getPassword(),getAccount.getPassword())){
+        if(!passwordEncoder.matches(account.getPassword(),savedAccount.getPassword())){
             throw new BadCredentialsException(PASSWORD_NOT_MATCH);
         }
 
-        // 아이디 패스워드 일치 시, jwt토큰을 발급하여 리턴
+        // 아이디 패스워드 일치 시, authentication등록
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(account.getUsername(), account.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // 등록한 authentication을 기반으로 token발급
         Optional<String> optionalJwt = jwtTokenUtil.generateJwtToken(authentication);
         String token = optionalJwt.orElseThrow(() -> new RuntimeException());
 

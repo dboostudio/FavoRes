@@ -1,8 +1,6 @@
 package studio.dboo.favores.modules.accounts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import studio.dboo.favores.modules.accounts.entity.Account;
 
 import javax.transaction.Transactional;
+
+import java.util.ArrayList;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
@@ -35,17 +35,18 @@ class AccountControllerTest {
     @Autowired PasswordEncoder passwordEncoder;
     @Autowired ObjectMapper objectMapper;
 
-    @Getter @Setter
-    private String jwtToken = "";
+    private ArrayList<String> jwtTokenList = new ArrayList<>();
 
     @BeforeEach
-    public void createTestAccounts(){
-        for(int i = 0; i<50; i++){
-            createUser(
+    public void createTestAccountsAndGetTokens(){
+        for(int i = 0; i<10; i++){
+            Account createdAccount = this.createUser(
                     "test"+i,
                     "1234",
                     "test"+i+"@test.com"
             );
+            Account loginAccount = Account.builder().username("test"+i).password("1234").build();
+            jwtTokenList.add(accountService.loginAndGenerateToken(loginAccount));
         }
     }
 
@@ -60,7 +61,8 @@ class AccountControllerTest {
     public void getAccount_success() throws Exception {
         // TODO - 로그인한 계정이 본인 계정에 한해서만 조회할수 있도록 변경
         String username = "test1";
-        mockMvc.perform(get("/api/account").param("username", username))
+        mockMvc.perform(get("/api/account").param("username", username)
+                    .header("Authorization", "Bearer " + jwtTokenList.get(1)))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

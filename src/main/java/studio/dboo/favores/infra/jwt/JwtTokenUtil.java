@@ -36,12 +36,6 @@ public class JwtTokenUtil implements InitializingBean {
         return Optional.ofNullable(token);
     }
 
-    public String getUsernameFromJwtToken(String token){
-        return Jwts.parser().setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody().getSubject();
-    }
-
     public void validateJwtToken(String token){
         Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
     }

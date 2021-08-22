@@ -38,10 +38,11 @@ public class JwtFilter extends OncePerRequestFilter {
     private List<String> EXCLUDE_URL = List.of(
                     "/","/view/**", "/static/**", "/css/**", "/js/**", "/images/**", "/node_modules/**", "/favicon.ico"
                     ,"/api/account"
-                    ,"/api/account/authenticate");
+                    ,"/api/account/login");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("request.getRequestURI()" + request.getRequestURI());
         String jwt = subStringPrefix(request);
         jwtTokenUtil.validateJwtToken(jwt);
         if(StringUtils.hasText(jwt)){
