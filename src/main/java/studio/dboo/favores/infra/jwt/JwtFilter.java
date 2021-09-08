@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("request.getRequestURI()" + request.getRequestURI());
+        log.debug("JwtFilter > doFilterInternal > request.getRequestURI()" + request.getRequestURI());
         String jwt = subStringPrefix(request);
         jwtTokenUtil.validateJwtToken(jwt);
         if(StringUtils.hasText(jwt)){

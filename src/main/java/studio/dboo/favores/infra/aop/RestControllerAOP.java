@@ -50,7 +50,7 @@ public class RestControllerAOP {
 
         stopWatch.stop();
 
-        log.info("해당 메소드는 총 " + stopWatch.getTotalTimeSeconds() + "초 걸렸습니다.");
+        log.info("해당 응답은 총 " + stopWatch.getTotalTimeSeconds() + "초 걸렸습니다.");
         log.info("결과값 : " + result);
         log.info("========= FAVORES LOG [END] : " + joinPoint.getTarget().getClass().getSimpleName()
                 + " >> " + method.getName() + " ==========");

@@ -34,10 +34,8 @@ public class Account{
     /** Login Info **/
     @Column(unique = true)
     @Size(min=4, max=16, message = USERNAME_LENGTH) @NotBlank(message = ENTER_USERNAME)
-    private String username;
+    private String username;                //사용자 아이디
 
-    @Column(unique = true) @Email
-    private String email;
     @NotNull(message = ENTER_PASSWORD) @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @JsonIgnore
@@ -66,16 +64,17 @@ public class Account{
 
     /** Private Info **/
     @Nullable @Pattern(regexp = "^\\\\d{2,3}-\\\\d{3,4}-\\\\d{4}$", message = CELLPHONE_FORM_NOT_CORRECT)
-    private String cellPhone; // 핸드폰번호
-    private String firstname; // 성
-    private String lastname; // 이름
-    private String birth; // 생년월일
-    private String address; // 주소
-    private String sex; // 성별
+    private String cellPhone;               // 핸드폰번호
+    @Email private String email;            // 사용자 이메일
+    private String firstname;               // 성
+    private String lastname;                // 이름
+    private String birth;                   // 생년월일
+    private String address;                 // 주소
+    private String sex;                     // 성별
 
     /** Tier, Point **/
-    private Integer tier; // 등급 : 1~5 blonze, silver, gold, platinum, diamond
-    private Long point; // 포인트
+    private Integer tier;                   // 등급 : 1~5 blonze, silver, gold, platinum, diamond
+    private Long point;                     // 포인트
 
     /** Logging Data Manipulation **/
     @CreationTimestamp
